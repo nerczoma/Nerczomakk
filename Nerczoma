@@ -1,13 +1,19 @@
--- Server Script (trong ServerScriptService)
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GivePetEvent = Instance.new("RemoteEvent", ReplicatedStorage)
 GivePetEvent.Name = "GivePet"
 
 GivePetEvent.OnServerEvent:Connect(function(sender, receiverName, petName)
 	local receiver = game.Players:FindFirstChild(receiverName)
-	if receiver then
-		-- Đây chỉ là ví dụ, bạn cần hệ thống pet rõ ràng
-		print(sender.Name .. " gửi pet " .. petName .. " cho " .. receiverName)
-		-- Gọi hàm chuyển pet tại đây nếu có
+	if receiver and sender ~= receiver then
+		local petFolder = sender:FindFirstChild("Pets")
+		if petFolder and petFolder:FindFirstChild(petName) then
+			local pet = petFolder[petName]
+			pet.Parent = receiver:FindFirstChild("Pets")
+			print(sender.Name .. " đã chuyển pet " .. petName .. " cho " .. receiver.Name)
+		else
+			warn("dragonfly")
+		end
+	else
+		warn("ohokpro")
 	end
 end)
